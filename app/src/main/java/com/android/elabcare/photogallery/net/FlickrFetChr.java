@@ -54,15 +54,24 @@ public class FlickrFetChr {
 
     public List<GalleryItem> fetchItems() {
         List<GalleryItem> items = new ArrayList<GalleryItem>();
-        String url = Uri.parse("https://api.flickr.com/services/rest/")
+//        String url = Uri.parse("https://api.flickr.com/services/rest/")
+//                .buildUpon()
+//                .appendQueryParameter("method", "flickr.photos.getRecent")
+//                .appendQueryParameter("api_key", API_KEY)
+//                .appendQueryParameter("extras", "url_s")
+//                .appendQueryParameter("format", "json")
+//                .appendQueryParameter("nojsoncallback", "1")
+//                .build().toString();
+        String url = Uri.parse("http://image.baidu.com/channel/listjson")
                 .buildUpon()
-                .appendQueryParameter("method", "flickr.photos.getRecent")
-                .appendQueryParameter("api_key", API_KEY)
-                .appendQueryParameter("extras", "url_s")
-                .appendQueryParameter("format", "json")
-                .appendQueryParameter("nojsoncallback", "1")
+                .appendQueryParameter("pn", "0")
+                .appendQueryParameter("rn", "30")
+                .appendQueryParameter("tag1", "美女")
+                .appendQueryParameter("tag2", "全部")
+                .appendQueryParameter("ie", "utf8")
                 .build().toString();
         try {
+            Log.i(TAG, "Url: " + url);
             String jsonString = getUrlString(url);
             Log.i(TAG, "Received JSON: " + jsonString);
             JSONObject jsonBody = new JSONObject(jsonString);
@@ -115,20 +124,20 @@ public class FlickrFetChr {
      *                 }
      */
     private void parseItems(List<GalleryItem> items, JSONObject jsonBody) throws JSONException {
-        JSONObject photosJsonObject = jsonBody.getJSONObject("photos");
-        JSONArray photoJsonArray = photosJsonObject.getJSONArray("photo");
+        //JSONObject photosJsonObject = jsonBody.getJSONObject("");
+        JSONArray photoJsonArray = jsonBody.getJSONArray("data");
 
-        for (int i = 0; i < photoJsonArray.length(); i++) {
+        for (int i = 0; i < photoJsonArray.length() - 1; i++) {
             JSONObject photoJsonObject = photoJsonArray.getJSONObject(i);
 
             GalleryItem item = new GalleryItem();
             item.setId(photoJsonObject.getString("id"));
-            item.setCaption(photoJsonObject.getString("title"));
+            item.setCaption(photoJsonObject.getString("abs"));
 
-            if (!photoJsonObject.has("url_s")) {
+            if (!photoJsonObject.has("image_url")) {
                 continue;
             }
-            item.setUrl(photoJsonObject.getString("url_s"));
+            item.setUrl(photoJsonObject.getString("image_url"));
             items.add(item);
         }
     }
