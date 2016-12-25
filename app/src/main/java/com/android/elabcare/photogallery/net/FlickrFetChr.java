@@ -65,7 +65,7 @@ public class FlickrFetChr {
         String url = Uri.parse("http://image.baidu.com/channel/listjson")
                 .buildUpon()
                 .appendQueryParameter("pn", "0")
-                .appendQueryParameter("rn", "30")
+                .appendQueryParameter("rn", "100")
                 .appendQueryParameter("tag1", "美女")
                 .appendQueryParameter("tag2", "全部")
                 .appendQueryParameter("ie", "utf8")
